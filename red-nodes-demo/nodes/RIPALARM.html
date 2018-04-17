@@ -1,0 +1,250 @@
+<script type="text/javascript">
+    RED.nodes.registerType('RIPALARM in',{
+        category: 'input',
+        color: 'rgb(231, 231, 174)',
+        defaults:{
+			"Displayname":{"value":"Displayname"},
+			"Room":{"value":""},
+			"Device":{"value":""},
+			"Traits":{"value":""},
+			"Condition":{"value":""},
+			"Value":{"value":0}
+		},
+        inputs:0,
+        outputs:1,
+        icon: "body.png",
+        label: function() {
+            return this.name||'RIPALARM';
+		},
+		oneditprepare:function(){
+			$('#node-input-Room').children().remove();
+			$("#node-input-Room")
+				.append($("<option value='------select room------' selected>------select room------</option>"));
+			var method = "GET",
+				url = "http://127.0.0.1:3000/room1",
+				data = {};
+			getJson(method,url,data,function(data){
+				console.log(data);
+				var rooms = JSON.parse(data);
+				$.each(rooms, function(index, room){
+					$("#node-input-Room")
+						.append($("<option ></option>")
+						.attr("value",room.name)
+						.attr("rid",room.rid)
+						.text(room.name)); 
+				});
+				
+			});
+			$('#node-input-Room').on("change",function(){
+				var rid = $("#node-input-Room").find("option:selected").attr("rid");
+				var method = "GET";
+				var url = "http://127.0.0.1:3000/device/"+rid+"/"+"RIPALARM";
+				var data = {};
+				$('#node-input-Device').children().remove();
+				$("#node-input-Device")
+				.append($("<option value='------select device------' selected>------select device------</option>"));
+				getJson(method,url,data,function(data){
+					var devices = JSON.parse(data); 
+					$.each(devices, function(index, device){
+						$("#node-input-Device")
+							.append($("<option ></option>")
+							.attr("value",device.name)
+							.attr("did",device.did)
+							.text(device.name)); 
+					});
+				})
+			});
+			$('#node-input-Device').on("change",function(){
+				$('#node-input-Traits').children().remove();
+				$("#node-input-Traits")
+				.append($("<option value='------select traits------' selected>------select traits------</option>"));
+				var did = $("#node-input-Device").find("option:selected").attr("did");
+				console.log("did: ",did);
+				var method = "GET";
+				var url = "http://127.0.0.1:3000/traits/RIPALARM/"+did;
+				var data = {};
+				getJson(method,url,data,function(data){
+					console.log("data ---: ",data);
+					var traits = JSON.parse(data); 
+					$.each(traits, function(index, trait){
+						$("#node-input-Traits")
+							.append($("<option ></option>")
+							.attr("value",trait.name)
+							.attr("tid",trait.tid)
+							.text(trait.name)); 
+					});
+				})
+			});
+
+			$('#node-input-Traits').on("change",function(){
+				$('#node-input-Condition').children().remove();
+				var name = $("#node-input-Traits").find("option:selected").attr("value");
+				console.log("name: ",name);
+				//$('#value111').children().hide();
+				if(name == "开关"){
+					$.each(["on", "off"], function(index, condition){
+						$("#node-input-Condition")
+							.append($("<option ></option>")
+							.attr("value",condition)
+							.text(condition)); 
+					});
+				}
+				
+			});
+			
+		},
+    });
+</script>
+<script type="text/x-red" data-template-name='RIPALARM in'>
+	
+    <div class="form-row">
+		<label for="node-input-Displayname"><i class="icon-tag"></i>Displayname</label>
+		<input type="text" id="node-input-Displayname" placeholder='Displayname'>
+	</div>
+	<div class="form-row">
+		<label for="node-input-Room"><i class="icon-tag"></i>Room</label>
+		<select id = "node-input-Room" style="width:70%;"></select> 
+	</div>
+	<div class="form-row">
+		<label for="node-input-Device"><i class="icon-tag"></i>Device</label>
+		<select id = "node-input-Device" style="width:70%;"></select>
+	</div>
+	<div class="form-row">
+		<label for="node-input-Traits"><i class="icon-tag"></i>Traits</label>
+		<select id = "node-input-Traits" style="width:70%;"></select>
+	</div>
+	<div class="form-row">
+		<label for="node-input-Condition"><i class="icon-tag"></i>Condition</label>
+		<select id = "node-input-Condition" style="width:70%;"></select>
+	</div>
+
+</script>
+<script type="text/x-red" data-help-name='RIPALARM in'>
+	<p>RIPALARM</p>
+</script>
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('RIPALARM out',{
+        category: 'output',
+        color: 'silver',
+        defaults:{
+			"Displayname1":{"value":"Displayname"},
+			"Room1":{"value":""},
+			"Device1":{"value":""},
+			"Traits1":{"value":""},
+			//"Condition1":{"value":""},
+			"Value1":{"value":0}
+		},
+        inputs:1,
+        outputs:0,
+        icon: "body.png",
+        align: "right",
+        label: function() {
+            return this.name||'RIPALARM';
+		},
+		oneditprepare:function(){
+			$('#node-input-Room1').children().remove();
+			$("#node-input-Room1")
+			.append($("<option value='------select room------' selected>------select room------</option>"));
+			var method = "GET",
+			url = "http://127.0.0.1:3000/room1",
+			data = {};
+			getJson(method,url,data,function(data){
+				console.log(data);
+				var rooms = JSON.parse(data);
+				$.each(rooms, function(index, room){
+					$("#node-input-Room1")
+						.append($("<option ></option>")
+						.attr("value",room.name)
+						.attr("rid",room.rid)
+						.text(room.name)); 
+				});
+				
+			});
+			$('#node-input-Room1').on("change",function(){
+				$('#node-input-Device1').children().remove();
+				$("#node-input-Device1")
+			.append($("<option value='------select device------' selected>------select device------</option>"));
+				var rid = $("#node-input-Room1").find("option:selected").attr("rid");
+				var method = "GET";
+				var url = "http://127.0.0.1:3000/device/"+rid+"/"+"RIPALARM";
+				var data = {};
+				getJson(method,url,data,function(data){
+					var devices = JSON.parse(data); 
+					$.each(devices, function(index, device){
+						$("#node-input-Device1")
+							.append($("<option ></option>")
+							.attr("value",device.name)
+							.attr("did",device.did)
+							.text(device.name)); 
+					});
+				})
+				
+			});
+			$('#node-input-Device1').on("change",function(){
+				$('#node-input-Traits1').children().remove();
+				$("#node-input-Traits1")
+			.append($("<option value='------select traits------' selected>------select traits------</option>"));
+			var did = $("#node-input-Device1").find("option:selected").attr("did");	
+			var method = "GET";
+				var url = "http://127.0.0.1:3000/traits/RIPALARM/"+did;
+				var data = {};
+				getJson(method,url,data,function(data){
+					var traits = JSON.parse(data); 
+					$.each(traits, function(index, trait){
+						$("#node-input-Traits1")
+							.append($("<option ></option>")
+							.attr("value",trait.name)
+							.attr("tid",trait.tid)
+							.text(trait.name)); 
+					});
+				})
+				
+			})
+			$('#node-input-Traits1').on("change",function(){
+				var name = $("#node-input-Traits1").find("option:selected").attr("value");
+				$('#node-input-Value1').children().remove();
+				if(name == "开关"){
+					
+					//$("#value222").append($("<select id = 'node-input-Value1' style='width:70%;'></select>"))
+					$.each(["on", "off"], function(index, condition){
+						$("#node-input-Value1")
+							.append($("<option ></option>")
+							.attr("value",condition)
+							.text(condition)); 
+					});
+				}
+				
+			});		
+		},
+    });
+</script>
+<script type="text/x-red" data-template-name='RIPALARM out'>
+	
+    <div class="form-row">
+		<label for="node-input-Displayname1"><i class="icon-tag"></i>Displayname</label>
+		<input type="text" id="node-input-Displayname1" placeholder='Displayname1'>
+	</div>
+	<div class="form-row">
+		<label for="node-input-Room1"><i class="icon-tag"></i>Room</label>
+		<select id = "node-input-Room1" style="width:70%;"></select>
+	</div>
+	<div class="form-row">
+		<label for="node-input-Device1"><i class="icon-tag"></i>Device</label>
+		<select id = "node-input-Device1" style="width:70%;"></select>
+	</div>
+	<div class="form-row">
+		<label for="node-input-Traits1"><i class="icon-tag"></i>Traits</label>
+		<select id = "node-input-Traits1" style="width:70%;"></select>
+	</div>
+	
+	<div class="form-row">
+		<label for="node-input-Value1"><i class="icon-tag"></i>Value1</label>
+		<select id = "node-input-Value1" style="width:70%;"></select>
+	</div>
+
+</script>
+<script type="text/x-red" data-help-name='RIPALARM out'>
+	<p>RIPALARM</p>
+</script>

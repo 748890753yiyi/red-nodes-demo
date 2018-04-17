@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sound',{
+        category: 'input',
+        color: 'rgb(231, 231, 174)',
+        defaults:{"name":{"value":"sound"},"decibel":{"value":20}},
+        inputs:0,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||'sound';
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name='sound'>
+    <div class="form-row">
+		<label for="node-input-name"><i class="icon-tag"></i>名称</label>
+		<input type="text" id="node-input-name" placeholder='name'>
+	</div>
+	<div class="form-row">
+		<label for="node-input-decibel"><i class="icon-tag"></i>分贝</label>
+		<input type="text" id="node-input-decibel" placeholder='decibel'>
+	</div>
+</script>
+<script type="text/x-red" data-help-name='sound'>
+	<p>门磁，有open和close状态</p>
+</script>

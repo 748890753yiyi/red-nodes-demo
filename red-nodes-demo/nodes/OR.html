@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('OR',{
+        category: 'function',
+        color: '#a6bbcf',
+        defaults:{"name":{"value":"OR"},"sum":{"value":2}},
+        inputs:1,
+        outputs:1,
+        icon: "switch.png",
+        label: function() {
+            return this.name||'OR';
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name='OR'>
+    <div class="form-row">
+		<label for="node-input-name"><i class="icon-tag"></i>名称</label>
+		<input type="text" id="node-input-name" placeholder='name'>
+	</div>
+	<div class="form-row">
+		<label for="node-input-sum"><i class="icon-tag"></i>连接数</label>
+		<input type="text" id="node-input-sum" placeholder='sum'>
+	</div>
+</script>
+<script type="text/x-red" data-help-name='OR'>
+	<p></p>
+</script>

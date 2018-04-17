@@ -1,0 +1,27 @@
+<script type="text/javascript">
+    RED.nodes.registerType('createNodeDemo', {
+        category: 'input',
+        color: 'rgb(231, 231, 174)',
+        defaults: {
+            name: {value: ""},
+
+        },
+        inputs: 0,
+        outputs: 1,
+        icon: "file.png",
+        label: function() {
+            return this.name || "createNodeDemo";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="createNodeDemo">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="createNodeDemo">
+    <p>createNodeDemo</p>
+</script>
